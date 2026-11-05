@@ -17,9 +17,8 @@ export function imageUrl(fileName) {
 export function videoUrl(fileName) {
   return videos[`../videos/${fileName}`]
 }
-
 export function pageUrl(page, anchor = '') {
-  return `/?page=${page}${anchor ? `#${anchor}` : ''}`
+  return `${import.meta.env.BASE_URL}?page=${page}${anchor ? `#${anchor}` : ''}`
 }
 
 export function SiteLayout({ activePage, children }) {
