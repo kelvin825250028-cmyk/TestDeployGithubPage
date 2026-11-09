@@ -47,18 +47,6 @@ function Admin() {
                   <p>Dashboard</p>
                 </a>
               </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#pesanan">
-                  <i className="bi bi-receipt me-2" aria-hidden="true" />
-                  <p>Pesanan</p>
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#pengunjung">
-                  <i className="bi bi-people me-2" aria-hidden="true" />
-                  <p>Pengunjung</p>
-                </a>
-              </li>
               <li className="nav-item mt-3">
                 <a className="nav-link" href={pageUrl('beranda')}>
                   <i className="bi bi-box-arrow-up-right me-2" aria-hidden="true" />
@@ -83,12 +71,12 @@ function Admin() {
               <div className="col-sm-8">
                 <h1 className="mb-1">Ringkasan</h1>
                 <p className="text-secondary mb-0">
-                  Data pada halaman ini hanya contoh dan belum terhubung ke backend.
+                  Selamat datang di dashboard admin!
                 </p>
               </div>
               <div className="col-sm-4">
                 <ol className="breadcrumb float-sm-end">
-                  <li className="breadcrumb-item"><a href={pageUrl('beranda')}>Pengunjung</a></li>
+                  <li className="breadcrumb-item"><a href="#dashboard">Dashboard</a></li>
                   <li className="breadcrumb-item active">Admin</li>
                 </ol>
               </div>
