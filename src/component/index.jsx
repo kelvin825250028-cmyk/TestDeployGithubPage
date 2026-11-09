@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 const images = import.meta.glob('../images/*', {
   eager: true,
   import: 'default',
@@ -21,12 +23,39 @@ export function pageUrl(page, anchor = '') {
   return `${import.meta.env.BASE_URL}?page=${page}${anchor ? `#${anchor}` : ''}`
 }
 
+function getStoreOpenStatus() {
+  const hour = Number(
+    new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Jakarta',
+      hour: '2-digit',
+      hourCycle: 'h23',
+    }).format(new Date()),
+  )
+
+  return hour >= 10 && hour < 22
+}
+
 export function SiteLayout({ activePage, children }) {
+  const [isOpen, setIsOpen] = useState(getStoreOpenStatus)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setIsOpen(getStoreOpenStatus())
+    }, 60_000)
+
+    return () => window.clearInterval(timer)
+  }, [])
+
   return (
     <>
       <div className="bg-dark text-center text-light py-2 small">
-        Buka setiap hari 10.00 - 22.00 WIB &bull; WA 0812-3456-7890 &bull;
-        Grogol, Jakarta Barat
+        <span className={`badge ${isOpen ? 'bg-success' : 'bg-danger'} me-2`}>
+          {isOpen ? 'BUKA' : 'TUTUP'}
+        </span>
+        {isOpen
+          ? 'Buka setiap hari 10.00 - 22.00 WIB'
+          : 'Tutup sekarang • Buka kembali pukul 10.00 WIB'}
+        {' '}&bull; WA 0812-3456-7890 &bull; Grogol, Jakarta Barat
       </div>
       <header className="site-header sticky-top bg-white">
         <div className="container d-flex align-items-center justify-content-between gap-3 flex-wrap py-3">
@@ -76,6 +105,9 @@ export function SiteLayout({ activePage, children }) {
             >
               Kontak
             </a>
+            <a className="nav-link p-0" href={pageUrl('admin')}>
+              Admin
+            </a>
           </nav>
           <a className="btn btn-danger" href={pageUrl('kontak')}>Pesan Sekarang</a>
         </div>
@@ -96,6 +128,7 @@ export function SiteLayout({ activePage, children }) {
                 <li><a className="d-block text-decoration-none" href={pageUrl('menu')}>Daftar Menu</a></li>
                 <li><a className="d-block text-decoration-none" href={pageUrl('tentang')}>Tentang Kami</a></li>
                 <li><a className="d-block text-decoration-none" href={pageUrl('kontak')}>Kontak &amp; Pesanan</a></li>
+                <li><a className="d-block text-decoration-none" href={pageUrl('admin')}>Dashboard Admin (Demo)</a></li>
               </ul>
             </div>
             <div className="col-12 col-md-6 col-lg-3">

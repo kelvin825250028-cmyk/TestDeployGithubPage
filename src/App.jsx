@@ -3,6 +3,7 @@ import Beranda from './component/beranda.jsx'
 import KontakPesan from './component/kontak_pesan.jsx'
 import Menu from './component/menu.jsx'
 import Tentang from './component/tentang.jsx'
+import Admin from './component/admin.jsx'
 import { SiteLayout } from './component/index.jsx'
 
 const pages = {
@@ -15,11 +16,17 @@ const pages = {
 function App() {
   const requestedPage = new URLSearchParams(window.location.search).get('page')
   const page = pages[requestedPage] ? requestedPage : 'beranda'
-  const { title, component: Page } = pages[page]
+  const isAdmin = requestedPage === 'admin'
+  const title = isAdmin ? 'Dashboard Admin' : pages[page].title
+  const Page = pages[page].component
 
   useEffect(() => {
     document.title = `${title} | Ayam Pak Gondesss`
   }, [title])
+
+  if (isAdmin) {
+    return <Admin />
+  }
 
   return (
     <SiteLayout activePage={page}>
