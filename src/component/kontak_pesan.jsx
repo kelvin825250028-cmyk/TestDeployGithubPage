@@ -4,6 +4,46 @@ import { pageUrl } from './index.jsx'
 function KontakPesan() {
   const [nama, setNama] = useState('')
   const [jumlah, setJumlah] = useState(1)
+  const [orderAccepted, setOrderAccepted] = useState(false)
+  const [kategori, setKategori] = useState('')
+  const [menu, setMenu] = useState('')
+
+  const menuOptions = {
+    'Paket Nasi': [
+      'Nasi Ayam Geprek Sambal Gondes',
+      'Nasi Ayam Goreng Sambal Kampoeng',
+      'Nasi Ayam Goreng Kalasan',
+      'Nasi Ayam Geprek Mozarella Sambal Gondes',
+      'Nasi Ayam Sambal Matah',
+      'Nasi Goreng Kampoeng',
+    ],
+    'Paket Indomie': [
+      'Indomie Ayam Geprek Sambal Gondes',
+      'Indomie Telor Ceplok / Dadar',
+      'Indomie Saja',
+      'Indomie Ayam Geprek Mozzarella Sambal Gondes',
+    ],
+    'Ala Carte & Cemilan': [
+      'Ayam Geprek Sambal Gondes',
+      'Ayam Goreng Sambal Kampoeng',
+      'Ayam Goreng Kalasan',
+      'Terong Crispy Geprek',
+      'Jamur Crispy',
+      'Telor Ceplok / Dadar',
+      'Nasi Putih Pulen',
+      'Krupuk Gendar / Kerung',
+    ],
+    'Aneka Minuman': [
+      'Es Teh Manis Jumbo',
+      'Nutrisari Jeruk / Es Milo',
+      'Air Mineral Botol 600ml',
+    ],
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault()
+    setOrderAccepted(true)
+  }
 
   return (
     <>
@@ -18,10 +58,15 @@ function KontakPesan() {
       <section className="py-5">
         <div className="container">
           <div className="row g-4">
-            <form className="card p-4 col-lg-8" action="#" method="post">
+            <form className="card p-4 col-lg-8" onSubmit={handleSubmit} onChange={() => setOrderAccepted(false)}>
               <span className="badge rounded-pill bg-warning-subtle text-danger-emphasis fw-bold">FORMULIR PEMESANAN</span>
               <h2>Detail Pembelian Anda</h2>
-              <p className="text-secondary mb-3">Konfirmasi cepat via WhatsApp.</p>
+              <p className="text-secondary mb-3">Isi detail pesanan Anda pada formulir berikut.</p>
+              {orderAccepted && (
+                <div className="alert alert-success" role="status">
+                  Pesanan diterima. Terima kasih telah memesan di Ayam Pak Gondesss!
+                </div>
+              )}
 
               <div className="mb-3">
                 <label className="form-label" htmlFor="nama">Nama Lengkap <span>*</span></label>
@@ -44,7 +89,17 @@ function KontakPesan() {
               </div>
               <div className="mb-3">
                 <label className="form-label" htmlFor="kategori">Kategori Menu <span>*</span></label>
-                <select className="form-select" id="kategori" name="kategori" required defaultValue="">
+                <select
+                  className="form-select"
+                  id="kategori"
+                  name="kategori"
+                  required
+                  value={kategori}
+                  onChange={(event) => {
+                    setKategori(event.target.value)
+                    setMenu('')
+                  }}
+                >
                   <option value="">-- Pilih Kategori --</option>
                   <option>Paket Nasi</option>
                   <option>Paket Indomie</option>
@@ -54,7 +109,22 @@ function KontakPesan() {
               </div>
               <div className="mb-3">
                 <label className="form-label" htmlFor="menu">Menu Spesifik <span>*</span></label>
-                <input type="text" className="form-control" id="menu" name="menu" placeholder="Contoh: Nasi Ayam Geprek Sambal Gondes" required />
+                <select
+                  className="form-select"
+                  id="menu"
+                  name="menu"
+                  required
+                  value={menu}
+                  onChange={(event) => setMenu(event.target.value)}
+                  disabled={!kategori}
+                >
+                  <option value="">
+                    {kategori ? '-- Pilih Menu --' : '-- Pilih kategori terlebih dahulu --'}
+                  </option>
+                  {(menuOptions[kategori] || []).map((item) => (
+                    <option key={item} value={item}>{item}</option>
+                  ))}
+                </select>
               </div>
               <div className="mb-3">
                 <label className="form-label" htmlFor="jumlah">Jumlah Porsi / Box <span>*</span></label>
@@ -97,11 +167,13 @@ function KontakPesan() {
               <div className="mb-3">
                 <label className="d-flex align-items-start gap-2">
                   <input type="checkbox" name="setuju" required />
-                  Saya menyetujui detail pesanan sudah benar dan bersedia dihubungi via WhatsApp oleh admin Ayam Pak Gondesss.
+                  Saya menyetujui detail pesanan sudah benar.
                 </label>
               </div>
-              <button className="btn btn-danger" type="submit">Kirim Pesanan Sekarang</button>
-              <p className="small text-secondary mt-2">Tidak dipungut biaya pendaftaran formulir.</p>
+              <button className="btn btn-danger" type="submit">Kirim Pesanan</button>
+              <p className="small text-secondary mt-2">
+                Pesanan hanya dikonfirmasi pada tampilan ini dan tidak disimpan ke database.
+              </p>
             </form>
 
             <aside className="col-lg-4">
